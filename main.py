@@ -9,75 +9,78 @@ load_dotenv()
 
 def scroll_page(driver):
     last_height = driver.execute_script("return document.body.scrollHeight")
+    count = int(os.getenv("Messages"))
     divs = []
-
-    while True:
+    div_sem_duplicate = []
+    boolean = True
+    while boolean:
         time.sleep(2)  # Aguarda um tempo para a página carregar após a rolagem
-        countToScroll = int(os.getenv("CountToScroll"))
-        for i in range(1,countToScroll):
-            driver.execute_script("document.querySelector('.DxyBCb').scrollTo(0, 300000000000000000000000);")
-            time.sleep(2)
-            driver.execute_script("document.querySelectorAll('.w8nwRe').forEach(elm => elm.click())")
-            div = driver.execute_script(f"return document.querySelectorAll('.jJc9Ad');")
 
-            for i in div:
-                divs.append(i)
+        driver.execute_script("document.querySelector('.DxyBCb').scrollTo(0, 300000000000000000000000);")
+        time.sleep(1)
+        driver.execute_script("document.querySelectorAll('.w8nwRe').forEach(elm => elm.click())")
+        div = driver.execute_script(f"return document.querySelectorAll('.jJc9Ad');")
 
-        new_height = driver.execute_script("return document.body.scrollHeight")
-        if new_height == last_height:
-            break
-        last_height = new_height
-    div_sem_duplicate = list(set(divs))
+        for i in div[len(div_sem_duplicate):]:
+            res = extract_data(driver,i)
+            if res != False: divs.append(res)
+            if len(divs) == count: break
+
+        # div_sem_duplicate = removeDuplicate(divs)
+        div_sem_duplicate = divs
+        print(len(divs))
+        if len(div_sem_duplicate) >= count: break
     return div_sem_duplicate
 
-def extract_data(driver, data):
-    # Aqui você pode extrair os dados que deseja da página
-    # Exemplo de extração de títulos de postagens em um site de blog:
-    time.sleep(2)
-    divs = driver.execute_script(f"return document.querySelectorAll('.jJc9Ad');")
-    # html_list = [element.outerHTML for element in divs]
+def removeDuplicate(array_de_dicionarios):
+    # Convertendo os dicionários em tuplas para torná-los hasháveis
+    tuplas = [tuple(d.items()) for d in array_de_dicionarios]
 
-    html_list = [element.get_attribute('outerHTML') for element in data]
+    # Removendo duplicatas
+    tuplas_sem_duplicatas = set(tuplas)
 
-    # div_element = divs[0].find_element_by_css_selector("review-full-text")
+    # Convertendo as tuplas de volta para dicionários
+    return [dict(t) for t in tuplas_sem_duplicatas]
 
-    # for title in titles:
-    text = []
-    for i in range(0, len(html_list)):
-        padrao = r'<span class="wiI7pd">(.*?)</span>'
-        padrao2 = r'<span class="review-full-text" style="display:none">(.*?)</span>'
-        nota = r'<span class="kvMYJc" role="img" aria-label="(.*?) "'
-        resultado = re.search(padrao, html_list[i])
-        texto_extraido = ""
+
+def extract_data(driver, html_elm):
+    html_list = html_elm.get_attribute('outerHTML')
+    padrao = r'<span class="wiI7pd">(.*?)</span>'
+    padrao2 = r'<span class="review-full-text" style="display:none">(.*?)</span>'
+    nota = r'<span class="kvMYJc" role="img" aria-label="(.*?) "'
+    nota2 = r'<span class="fzvQIb">(.*?)/'
+
+    resultado = re.search(padrao, html_list)
+    resultado2 = re.search(padrao2,html_list)
+
         # Se o padrão for encontrado, imprime o texto correspondente
 
-        if resultado:
-            texto_extraido = resultado.group(1)
+    texto_extraido = ""
+    if resultado:
+        texto_extraido = resultado.group(1)
+    elif resultado2:
+        texto_extraido = resultado2.group(1)
 
-        resultado2 = re.search(padrao2,html_list[i])
+    resultadoNota = re.search(nota,html_list)
+    resultadoNota2 = re.search(nota2,html_list)
 
-        if resultado2:
-            texto_extraido = resultado2.group(1)
+    nota = ""
 
-        resultadoNota = re.search(nota,html_list[i])
+    if resultadoNota:
+        nota = resultadoNota.group(1)[0]
+    elif resultadoNota2:
+        nota = resultadoNota2.group(1)
 
-        nota = ""
-        if resultadoNota:
-            nota = resultadoNota.group(1)[0]
-        else:
-            nota = ""
+    if nota == "": return False
+    if texto_extraido == "": return False
+    notaFloat = int(nota)
 
-        if nota == "": continue
-        notaFloat = int(nota)
-        text.append({"Nota":notaFloat,"Comentario":texto_extraido})
-
-    return text
+    return  {"Nota":notaFloat,"Comentario":texto_extraido}
 
 def crawl(url):
     driver = webdriver.Chrome()  # Você precisará baixar o driver do Chrome: https://sites.google.com/a/chromium.org/chromedriver/downloads
     driver.get(url)
-    apt = scroll_page(driver)
-    data = extract_data(driver,apt)
+    data = scroll_page(driver)
     driver.quit()
 
     return data
