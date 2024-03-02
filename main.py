@@ -13,7 +13,11 @@ def scroll_page(driver):
     divs = []
     div_sem_duplicate = []
     boolean = True
+    last = 0
+    countCoverge = 0
+    converge = int(os.getenv("Converge"))
     while boolean:
+        div = []
         time.sleep(2)  # Aguarda um tempo para a página carregar após a rolagem
 
         driver.execute_script("document.querySelector('.DxyBCb').scrollTo(0, 300000000000000000000000);")
@@ -24,11 +28,19 @@ def scroll_page(driver):
         for i in div[len(div_sem_duplicate):]:
             res = extract_data(driver,i)
             if res != False: divs.append(res)
-            if len(divs) == count: break
 
-        # div_sem_duplicate = removeDuplicate(divs)
-        div_sem_duplicate = divs
-        print(len(divs))
+        div_sem_duplicate = removeDuplicate(divs)
+        print(len(div_sem_duplicate))
+        # div_sem_duplicate = divs
+        if last == len(div_sem_duplicate):
+            countCoverge+=1
+        else:
+            last = len(div_sem_duplicate)
+
+        if countCoverge == converge:
+            print("Break by coverge")
+            break
+
         if len(div_sem_duplicate) >= count: break
     return div_sem_duplicate
 
