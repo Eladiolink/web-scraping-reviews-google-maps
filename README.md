@@ -1,5 +1,7 @@
 # Web Scraping Reviews from Google Maps
 
+Languages: [English](https://github.com/Eladiolink/web-scraping-reviews-google-maps?tab=readme-ov-file#en) | [Portugês](https://github.com/Eladiolink/web-scraping-reviews-google-maps?tab=readme-ov-file#PT-BR)
+
 ## En
 
 This is a Python project to collect Google Maps reviews for both locations and hotels listed on Google Maps. This script can be useful for sentiment analysis, extracting insights into the reputation of a location or hotel, and much more.
@@ -54,7 +56,7 @@ Você pode instalar essas bibliotecas usando o pip:
   pip install requests beautifulsoup4
 ```
 
-# Pt-BR
+# PT-BR
 
 ## Como usar
 
