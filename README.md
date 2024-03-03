@@ -1,5 +1,44 @@
 # Web Scraping Reviews from Google Maps
 
+## En
+
+This is a Python project to collect Google Maps reviews for both locations and hotels listed on Google Maps. This script can be useful for sentiment analysis, extracting insights into the reputation of a location or hotel, and much more.
+
+## Requirements
+
+Make sure you have the following Python libraries installed:
+
+- `requests`: To make HTTP requests.
+- `beautifulsoup4`: To parse the HTML and extract the necessary data.
+
+You can install these libraries using pip:
+
+```sh 
+  pip install requests beautifulsoup4
+```
+
+## How to use
+
+1. Clone this repository to your local environment:
+
+```sh 
+  git clone https://github.com/Eladiolink/web-scraping-reviews-google-maps.git
+```
+
+2. Navigate to the project directory:
+
+```sh 
+  cd web-scraping-reviews-google-maps
+```
+
+3. Run the Python script:
+
+```sh 
+  python scrape_reviews.py
+```
+
+The script will ask for the URL of the location or hotel on Google Maps for which you want to pull reviews. After providing the URL, the script will analyze the page and extract the available reviews.
+
 Este é um projeto em Python para coletar avaliações do Google Maps, tanto para locais quanto para hotéis listados no Google Maps. Este script pode ser útil para análise de sentimentos, extrair insights sobre a reputação de um local ou hotel e muito mais.
 
 ## Requisitos
@@ -11,21 +50,31 @@ Certifique-se de ter as seguintes bibliotecas Python instaladas:
 
 Você pode instalar essas bibliotecas usando o pip:
 
-pip install requests beautifulsoup4
+```sh 
+  pip install requests beautifulsoup4
+```
+
+# Pt-BR
 
 ## Como usar
 
 1. Clone este repositório para o seu ambiente local:
 
-https://github.com/Eladiolink/web-scraping-reviews-google-maps.git
+```sh 
+  git clone https://github.com/Eladiolink/web-scraping-reviews-google-maps.git
+```
 
 2. Navegue até o diretório do projeto:
 
-cd web-scraping-reviews-google-maps
+```sh 
+  cd web-scraping-reviews-google-maps
+```
 
 3. Execute o script Python:
 
-python scrape_reviews.py
+```sh 
+  python scrape_reviews.py
+```
 
 O script solicitará a URL do local ou do hotel no Google Maps para o qual deseja extrair as avaliações. Após fornecer a URL, o script irá analisar a página e extrair as avaliações disponíveis.
 
